@@ -8,6 +8,7 @@ import {
   updateDoc,
   deleteDoc,
   doc,
+  setDoc
 } from "firebase/firestore";
 import { createUserWithEmailAndPassword } from "@firebase/auth";
 
@@ -31,7 +32,8 @@ const Form = ()=> {
 
   //const [users, setUsers] = useState([]);
   const usersCollectionRef = collection(db, "users");
-
+  const mydoc = usersCollectionRef
+  
   const createUser = async () => {
     
     const res = await addDoc(usersCollectionRef, { email: newEmail, pass: newPass, name:newName });
