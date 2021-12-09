@@ -18,6 +18,7 @@ const Form = () => {
   const [newPass, setNewPass] = useState('');
   const [newName, setNewName] = useState('');
   const [newfile, setNewFile] = useState('');
+  const [newurls, setUrl] = useState('');
   console.log(newfile)
 
   const register = async () => {
@@ -38,10 +39,28 @@ const Form = () => {
   const mydoc = usersCollectionRef
 
   const createUser = async () => {
+    const uploadFiles = (file) => {
+      //
+      
+      const sotrageRef = ref(storage, `images/${newfile.name}`);
+      const uploadTask = uploadBytesResumable(sotrageRef, file);
+  
+      uploadTask.on(
+        "state_changed",
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            console.log("File available at", downloadURL);
+            setUrl(downloadURL)
+            console.log(newurls)
+          });
+        }
+      );
+    };
 
-    const res = await addDoc(usersCollectionRef, { email: newEmail, pass: newPass, name: newName });
+    const res = await addDoc(usersCollectionRef, { email: newEmail, pass: newPass, name: newName, urls:newurls });
     register(res);
     uploadFiles(newfile)
+    console.log(newurls)
 
    
 
@@ -51,21 +70,7 @@ const Form = () => {
     //setNewAge('')
   };
 
-  const uploadFiles = (file) => {
-    //
-    if (!file) return;
-    const sotrageRef = ref(storage, `images/${newfile.name}`);
-    const uploadTask = uploadBytesResumable(sotrageRef, file);
-
-    uploadTask.on(
-      "state_changed",
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          console.log("File available at", downloadURL);
-        });
-      }
-    );
-  };
+  
 
 
   //   const updateUser = async (id, age) => {
